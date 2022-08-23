@@ -2,17 +2,22 @@
 // http://localhost:3000/isolated/exercise/02.js
 
 import * as React from 'react'
+import {useState} from 'react'
 import {useEffect} from 'react'
 
-function Greeting({initialName = ''}) {
-  const localStorageName = window.localStorage.getItem('name')
-  // lazy initialization to avoid a performance bottleneck of reading into localStorage on every render.
-  const [name, setName] = React.useState(() => localStorageName || initialName)
+function useLocalStoragetState(key, defaultValue = '') {
+  const localStorageName = window.localStorage.getItem(key)
+  const [state, setState] = useState(() => localStorageName || defaultValue)
 
   useEffect(() => {
-    window.localStorage.setItem('name', name)
-    console.log(window.localStorage.getItem('name'))
-  }, [name])
+    window.localStorage.setItem(key, state)
+  }, [key, state])
+
+  return [state, setState]
+}
+
+function Greeting({initialName = ''}) {
+  const [name, setName] = useLocalStoragetState('name', initialName)
 
   function handleChange(event) {
     setName(() => event.target.value)
