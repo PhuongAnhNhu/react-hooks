@@ -6,18 +6,16 @@ import {useEffect} from 'react'
 
 function Greeting({initialName = ''}) {
   const localStorageName = window.localStorage.getItem('name')
-  const [name, setName] = React.useState(() =>
-    localStorageName ? localStorageName : initialName,
-  )
+  // lazy initialization to avoid a performance bottleneck of reading into localStorage on every render.
+  const [name, setName] = React.useState(() => localStorageName || initialName)
 
   useEffect(() => {
     window.localStorage.setItem('name', name)
     console.log(window.localStorage.getItem('name'))
-  })
+  }, [name])
 
   function handleChange(event) {
     setName(() => event.target.value)
-    console.log(localStorageName)
   }
   return (
     <div>
