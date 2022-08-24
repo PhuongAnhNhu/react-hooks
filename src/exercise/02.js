@@ -6,11 +6,11 @@ import {useState} from 'react'
 import {useEffect} from 'react'
 
 function useLocalStoragetState(key, defaultValue = '') {
-  const localStorageName = window.localStorage.getItem(key)
-  const [state, setState] = useState(() => localStorageName || defaultValue)
+  const value = window.localStorage.getItem(key)
+  const [state, setState] = useState(() => value || defaultValue)
 
   useEffect(() => {
-    window.localStorage.setItem(key, state)
+    window.localStorage.setItem(key, JSON.stringify(state))
   }, [key, state])
 
   return [state, setState]
